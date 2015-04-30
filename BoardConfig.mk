@@ -162,8 +162,8 @@ BOARD_USES_LEGACY_MMAP := true
 TARGET_OTA_ASSERT_DEVICE := codina,i8160,GT-I8160
 
 # Kernel
-TARGET_KERNEL_SOURCE := kernel/codina/chrono
-TARGET_KERNEL_CONFIG := codina_defconfig
+TARGET_KERNEL_SOURCE := kernel/codina/ace2nutzer		
+TARGET_KERNEL_CONFIG := codina_ext4_defconfig
 
 ifeq ($(DEVICE_CODINA_ENABLE_SDBOOT),true)
 TARGET_PREBUILT_KERNEL = $(CODINARAMFS_KERNEL)
