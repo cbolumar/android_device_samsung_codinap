@@ -18,14 +18,14 @@ These are repositories I use. You can put this file on `.repo/local_manifests/co
 <manifest>
 	
 	<!-- kernels & bootables -->
-	<project path="kernel/codina/ace2nutzer" name="ace2nutzer/Samsung_STE_Kernel" revision="3.0.101" />
+	<project path="kernel/codina/chrono" name="Dhoine" revision="stable" />
 	<project path="bootable/codinaramfs" name="nieltg/codina-initramfs-sdboot" revision="master" />
 	
 	<!-- cm11 base -->
 	<project path="vendor/samsung/u8500-common" name="TeamCanjica/android_vendor_samsung_u8500-common" revision="cm-11.0" />
 	
 	<!-- cm12 custom -->
-	<project path="device/samsung/codina" name="nieltg/android_device_samsung_codina" />
+	<project path="device/samsung/codina" name="Dhoine/android_device_samsung_codina" />
 	<project path="hardware/u8500" name="nieltg/android_hardware_u8500" />
 	
 </manifest>
