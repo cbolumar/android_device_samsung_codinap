@@ -22,7 +22,7 @@ These are repositories I use. You can put this file on `.repo/local_manifests/co
 	<project path="bootable/codinaramfs" name="nieltg/codina-initramfs-sdboot" revision="master" />
 	
 	<!-- cm11 base -->
-	<project path="vendor/samsung/u8500-common" name="TeamCanjica/android_vendor_samsung_u8500-common" revision="cm-11.0" />
+	<project path="vendor/samsung/u8500-common" name="Dhoine/android_vendor_samsung_u8500-common" revision="cm-11.0" />
 	
 	<!-- cm12 custom -->
 	<project path="device/samsung/codina" name="Dhoine/android_device_samsung_codina" />
