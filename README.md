@@ -7,7 +7,6 @@ Notes & issues I've encountered:
 - InCallUI is shown very late & the Settings app is laggy.
 - The recorded video is green, but the audio is recorded well.
 - Flashlight is slow since it use camera interface. (should use sysfs interface)
-- WebView component is not being rendered. (black screen on Browser app)
 
 ## Step 1: Local Manifests & Sync
 
