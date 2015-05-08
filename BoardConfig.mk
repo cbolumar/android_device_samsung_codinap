@@ -179,9 +179,3 @@ TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/fstab.samsungcodina
 TARGET_BOOTANIMATION_PRELOAD := true
 TARGET_BOOTANIMATION_TEXTURE_CACHE := true
 TARGET_BOOTANIMATION_USE_RGB565 := true
-
-# Wi-Fi test
-PRODUCT_PACKAGES += \
-libwpa_client \
-hostapd \
-dhcpcd.conf
