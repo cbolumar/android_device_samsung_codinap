@@ -213,3 +213,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/gps.conf:system/etc/gps.conf
 
+# Wi-Fi test
+PRODUCT_PACKAGES += \
+libwpa_client \
+hostapd \
+dhcpcd.conf
