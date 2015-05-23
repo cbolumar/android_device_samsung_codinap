@@ -1,0 +1,27 @@
+From cbecb889b3c37a7669b379bb19af31b6f76df469 Mon Sep 17 00:00:00 2001
+From: Shilin Victor <chrono.monochrome@gmail.com>
+Date: Fri, 22 May 2015 18:21:29 +0300
+Subject: [PATCH 3/3] SystemUI: remove screencast tile
+
+Change-Id: Ic40e2dc04d20888f2f96cc3aa7e91f84e4114efe
+Signed-off-by: Shilin Victor <chrono.monochrome@gmail.com>
+---
+ packages/SystemUI/res/values/config.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/res/values/config.xml b/packages/SystemUI/res/values/config.xml
+index 0fece50..1a0068e 100644
+--- a/packages/SystemUI/res/values/config.xml
++++ b/packages/SystemUI/res/values/config.xml
+@@ -118,7 +118,7 @@
+ 
+     <!-- The default tiles to display in QuickSettings -->
+     <string name="quick_settings_tiles_default" translatable="false">
+-        wifi,bt,cell,airplane,rotation,flashlight,location,cast
++        wifi,bt,cell,airplane,rotation,flashlight,location
+     </string>
+ 
+     <!-- The tiles to display in QuickSettings -->
+-- 
+1.9.1
+
