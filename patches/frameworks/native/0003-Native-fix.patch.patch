@@ -1,16 +1,16 @@
-From 3eafb39b0ab5b4de046dd73ecd6c8715cbbfad7b Mon Sep 17 00:00:00 2001
+From 517c5363b0b28a4a30ab13e00cb2e67f962eda85 Mon Sep 17 00:00:00 2001
 From: Shilin Victor <chrono.monochrome@gmail.com>
-Date: Sat, 16 May 2015 15:56:26 +0300
-Subject: [PATCH 1/7] 0002-frameworks-native_Native-fix.patch.patch
+Date: Sat, 23 May 2015 17:01:49 +0300
+Subject: [PATCH 3/3] Native-fix.patch
 
-Change-Id: Ie8da8fbb38d2c2e20f6db2a2477e8b84e538d539
+Change-Id: I2f93d65998f8c182f16ff1791dd4f8fbdac549ef
 ---
  include/binder/MemoryBase.h                |   3 +
  include/binder/Parcel.h                    |  32 +++++-
  include/gui/BufferItem.h                   |   4 +-
  include/gui/BufferQueue.h                  |   4 +
  include/gui/ConsumerBase.h                 |   5 +-
- include/gui/GLConsumer.h                   |  38 ++++++
+ include/gui/GLConsumer.h                   |  38 +++++++
  include/gui/IGraphicBufferConsumer.h       |   4 +
  include/gui/IGraphicBufferProducer.h       |   4 +
  include/media/openmax/OMX_IVCommon.h       |   3 +
@@ -18,20 +18,20 @@ Change-Id: Ie8da8fbb38d2c2e20f6db2a2477e8b84e538d539
  include/ui/GraphicBuffer.h                 |  10 +-
  include/ui/PixelFormat.h                   |   9 ++
  include/ui/Region.h                        |  24 ++++
- libs/binder/MemoryBase.cpp                 |  19 +++
+ libs/binder/MemoryBase.cpp                 |  19 ++++
  libs/binder/Parcel.cpp                     |  14 +++
  libs/gui/Android.mk                        |   1 +
  libs/gui/BufferQueueProducer.cpp           |   4 +-
  libs/gui/ConsumerBase.cpp                  |   2 +-
- libs/gui/GLConsumer.cpp                    | 178 ++++++++++++++++++++++++++++-
+ libs/gui/GLConsumer.cpp                    | 175 ++++++++++++++++++++++++++++-
  libs/ui/PixelFormat.cpp                    |   4 +
  opengl/include/EGL/eglext.h                |   2 +
  opengl/libs/EGL/eglApi.cpp                 |   4 +
  opengl/libs/EGL/egl_entries.in             |   2 +
- services/surfaceflinger/DisplayDevice.cpp  |  30 ++++-
+ services/surfaceflinger/DisplayDevice.cpp  |  27 ++++-
  services/surfaceflinger/DisplayDevice.h    |   2 +
  services/surfaceflinger/SurfaceFlinger.cpp |   3 +
- 26 files changed, 391 insertions(+), 18 deletions(-)
+ 26 files changed, 386 insertions(+), 17 deletions(-)
  mode change 100644 => 100755 services/surfaceflinger/DisplayDevice.cpp
 
 diff --git a/include/binder/MemoryBase.h b/include/binder/MemoryBase.h
@@ -551,7 +551,7 @@ index 210e98e..e171398 100644
          freeBufferLocked(i);
      }
 diff --git a/libs/gui/GLConsumer.cpp b/libs/gui/GLConsumer.cpp
-index 778df4e..802ab6a 100644
+index 778df4e..4ae5f4f 100644
 --- a/libs/gui/GLConsumer.cpp
 +++ b/libs/gui/GLConsumer.cpp
 @@ -133,6 +133,9 @@ GLConsumer::GLConsumer(const sp<IGraphicBufferConsumer>& bq, uint32_t tex,
@@ -564,17 +564,7 @@ index 778df4e..802ab6a 100644
      mAttached(true)
  {
      ST_LOGV("GLConsumer");
-@@ -163,6 +166,9 @@ GLConsumer::GLConsumer(const sp<IGraphicBufferConsumer>& bq, uint32_t texTarget,
-     mEglDisplay(EGL_NO_DISPLAY),
-     mEglContext(EGL_NO_CONTEXT),
-     mCurrentTexture(BufferQueue::INVALID_BUFFER_SLOT),
-+#ifdef STE_HARDWARE
-+    mNextBlitSlot(0),
-+#endif
-     mAttached(false)
- {
-     ST_LOGV("GLConsumer");
-@@ -170,6 +176,36 @@ GLConsumer::GLConsumer(const sp<IGraphicBufferConsumer>& bq, uint32_t texTarget,
+@@ -140,6 +143,21 @@ GLConsumer::GLConsumer(const sp<IGraphicBufferConsumer>& bq, uint32_t tex,
      memcpy(mCurrentTransformMatrix, mtxIdentity,
              sizeof(mCurrentTransformMatrix));
  
@@ -593,6 +583,23 @@ index 778df4e..802ab6a 100644
 +    }
 +#endif
 +
+     mConsumer->setConsumerUsageBits(DEFAULT_USAGE_FLAGS);
+ #ifdef QCOM_BSP
+     mCurrentDirtyRect.clear();
+@@ -163,6 +181,9 @@ GLConsumer::GLConsumer(const sp<IGraphicBufferConsumer>& bq, uint32_t texTarget,
+     mEglDisplay(EGL_NO_DISPLAY),
+     mEglContext(EGL_NO_CONTEXT),
+     mCurrentTexture(BufferQueue::INVALID_BUFFER_SLOT),
++#ifdef STE_HARDWARE
++    mNextBlitSlot(0),
++#endif
+     mAttached(false)
+ {
+     ST_LOGV("GLConsumer");
+@@ -170,6 +191,21 @@ GLConsumer::GLConsumer(const sp<IGraphicBufferConsumer>& bq, uint32_t texTarget,
+     memcpy(mCurrentTransformMatrix, mtxIdentity,
+             sizeof(mCurrentTransformMatrix));
+ 
 +#ifdef STE_HARDWARE
 +    hw_module_t const* module;
 +    mBlitEngine = 0;
@@ -725,17 +732,7 @@ index 778df4e..802ab6a 100644
          return err;
      }
  
-@@ -626,7 +744,8 @@ status_t GLConsumer::attachToContext(uint32_t tex) {
-     mTexName = tex;
-     mAttached = true;
- 
--    if (mCurrentTextureImage != NULL) {
-+    if (
-+mCurrentTextureImage != NULL) {
-         // This may wait for a buffer a second time. This is likely required if
-         // this is a different context, since otherwise the wait could be skipped
-         // by bouncing through another context. For the same context the extra
-@@ -1045,6 +1164,59 @@ void GLConsumer::dumpLocked(String8& result, const char* prefix) const
+@@ -1045,6 +1163,59 @@ void GLConsumer::dumpLocked(String8& result, const char* prefix) const
      ConsumerBase::dumpLocked(result, prefix);
  }
  
@@ -879,7 +876,7 @@ index aa92ea0..4d2de12 100644
 diff --git a/services/surfaceflinger/DisplayDevice.cpp b/services/surfaceflinger/DisplayDevice.cpp
 old mode 100644
 new mode 100755
-index aaffec4..baedd21
+index aaffec4..1911b3d
 --- a/services/surfaceflinger/DisplayDevice.cpp
 +++ b/services/surfaceflinger/DisplayDevice.cpp
 @@ -26,6 +26,9 @@
@@ -892,7 +889,7 @@ index aaffec4..baedd21
  
  #include <gui/Surface.h>
  
-@@ -81,11 +84,14 @@ DisplayDevice::DisplayDevice(
+@@ -81,11 +84,11 @@ DisplayDevice::DisplayDevice(
        mPowerMode(HWC_POWER_MODE_OFF),
        mActiveConfig(0)
  {
@@ -902,16 +899,13 @@ index aaffec4..baedd21
 -#else
 +#ifdef STE_HARDWARE
      ANativeWindow* const window = new FramebufferNativeWindow();
-+#elif defined(EGL_NEEDS_FNW)
-+     mNativeWindow = new Surface(producer, false);
-+     ANativeWindow* const window = new FramebufferNativeWindow();
 +#else
 +     mNativeWindow = new Surface(producer, false);
 +     ANativeWindow* const window = mNativeWindow.get();
  #endif
  
      /*
-@@ -458,7 +464,12 @@ void DisplayDevice::setDisplaySize(const int newWidth, const int newHeight) {
+@@ -458,7 +461,12 @@ void DisplayDevice::setDisplaySize(const int newWidth, const int newHeight) {
  
      mDisplaySurface->resizeBuffers(newWidth, newHeight);
  
@@ -924,7 +918,7 @@ index aaffec4..baedd21
      mSurface = eglCreateWindowSurface(mDisplay, mConfig, window, NULL);
      eglQuerySurface(mDisplay, mSurface, EGL_WIDTH,  &mDisplayWidth);
      eglQuerySurface(mDisplay, mSurface, EGL_HEIGHT, &mDisplayHeight);
-@@ -550,12 +561,19 @@ void DisplayDevice::dump(String8& result) const {
+@@ -550,12 +558,19 @@ void DisplayDevice::dump(String8& result) const {
      const Transform& tr(mGlobalTransform);
      result.appendFormat(
          "+ DisplayDevice: %s\n"
