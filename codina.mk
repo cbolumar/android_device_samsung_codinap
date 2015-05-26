@@ -202,7 +202,6 @@ $(call inherit-product, vendor/samsung/u8500-common/codina/codina-vendor-blobs.m
 
 # Init files
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/device_tunables.rc:root/device_tunables.rc \
     $(LOCAL_PATH)/rootdir/fstab.samsungcodina:root/fstab.samsungcodina \
     $(LOCAL_PATH)/rootdir/init.samsungcodina.rc:root/init.samsungcodina.rc \
     $(LOCAL_PATH)/rootdir/init.recovery.samsungcodina.rc:root/init.recovery.samsungcodina.rc \
