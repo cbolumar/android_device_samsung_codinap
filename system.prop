@@ -23,3 +23,11 @@ ro.device.gpu=Mali-400MP Single Core
 ro.device.rear_cam=5 Mpix (2592x1944)
 ro.device.front_cam=VGA (640x480)
 ro.device.screen_res=3,8' 800x480 pixels ( ~246 ppi)
+
+# hwui
+ro.hwui.drop_shadow_cache_size=1
+ro.hwui.gradient_cache_size=0.2
+ro.hwui.layer_cache_size=6
+ro.hwui.path_cache_size=2
+ro.hwui.r_buffer_cache_size=1 
+ro.hwui.texture_cache_size=8
