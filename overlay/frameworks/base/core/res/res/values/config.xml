@@ -143,5 +143,20 @@
     
     <!-- The VoiceMail default value is displayed to my own number if it is true -->
     <bool name="config_telephony_use_own_number_for_voicemail">true</bool>
+
+    <!-- Is the device LTE capable -->
+    <bool name="config_lte_capable">false</bool>
+
+    <!-- Boolean to enable stk functionality on Samsung phones -->
+    <bool name="config_samsung_stk">true</bool>
+
+    <!-- If there is no sysfs-based control mechanism, enable this -->
+    <bool name="useCameraInterface">false</bool>
+
+    <!-- Full path to the sysfs toggle -->
+    <string name="flashDevice">/sys/class/camera/rear/rear_flash</string>
+
+    <!-- On setting -->
+    <integer name="valueOn">10</integer>
 </resources>
 
