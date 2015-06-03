@@ -213,6 +213,3 @@ TARGET_BOOTANIMATION_USE_RGB565 := true
 
 # Dex Pre-opt
 WITH_DEXPREOPT := true
-
-# Set toolchain 
-PLATFORM_LINARO_4.9 := true
